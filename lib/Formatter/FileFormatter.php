@@ -70,25 +70,11 @@ class FileFormatter implements IFormatter {
 			$info = $this->infoCache->getInfoById($this->user, $fileId, $param);
 		} else {
 			$info = $this->infoCache->getInfoByPath($this->user, $param);
-		}
-
-		if ($info['is_dir']) {
-			$linkData = ['dir' => $info['path']];
-		} else {
-			$parentDir = (substr_count($info['path'], '/') === 1) ? '/' : dirname($info['path']);
-			$fileName = basename($info['path']);
-			$linkData = [
-				'dir' => $parentDir,
-				'scrollto' => $fileName,
-			];
-		}
-
-		if ($info['view'] !== '') {
-			$linkData['view'] = $info['view'];
+			$fileId = $info['fileid'];
 		}
 
 		$param = trim($param, '/');
-		$fileLink = $this->urlGenerator->linkToRouteAbsolute('files.view.index', $linkData);
+		$fileLink = $this->urlGenerator->linkToRouteAbsolute('files.viewcontroller.showFile', ['fileId' => $fileId]);
 
 		return '<file link="' . $fileLink . '" id="' . Util::sanitizeHTML($fileId) . '">' . Util::sanitizeHTML($param) . '</file>';
 	}
