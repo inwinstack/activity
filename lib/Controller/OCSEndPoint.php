@@ -294,7 +294,7 @@ class OCSEndPoint {
 		}
 
 		$preview = [
-			'link'			=> $this->getPreviewLink($fileId),
+			'link'			=> $this->getPreviewLink($info['path'], $info['is_dir'], $info['view'], $fileId),
 			'source'		=> '',
 			'isMimeTypeIcon' => true,
 		];
@@ -332,7 +332,7 @@ class OCSEndPoint {
 	protected function getPreviewFromPath($filePath, $info) {
 		$mimeType = $this->mimeTypeDetector->detectPath($filePath);
 		$preview = [
-			'link'			=> $this->getPreviewLink($info['fileid']),
+			'link'			=> $this->getPreviewLink($info['path'], $info['is_dir'], $info['view'], $info['fileid']),
 			'source'		=> $this->getPreviewPathFromMimeType($mimeType),
 			'isMimeTypeIcon' => true,
 		];
@@ -354,10 +354,26 @@ class OCSEndPoint {
 	}
 
 	/**
+	 * @param string $path
+	 * @param bool $isDir
+	 * @param string $view
 	 * @param int $fileId
 	 * @return string
 	 */
-	protected function getPreviewLink($fileId) {
-		return $this->urlGenerator->linkToRoute('files.viewcontroller.showFile', ['fileId' => $fileId]);
+	protected function getPreviewLink($path, $isDir, $view, $fileId) {
+		if ($fileId !== null && $fileId !== '') {
+			return $this->urlGenerator->linkToRoute('files.viewcontroller.showFile', ['fileId' => $fileId]);
+		}
+		$params = [
+			'dir' => $path,
+		];
+		if (!$isDir) {
+			$params['dir'] = (substr_count($path, '/') === 1) ? '/' : dirname($path);
+			$params['scrollto'] = basename($path);
+		}
+		if ($view !== '') {
+			$params['view'] = $view;
+		}
+		return $this->urlGenerator->linkToRoute('files.view.index', $params);
 	}
 }

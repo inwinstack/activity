@@ -738,13 +738,34 @@ class OCSEndPointTest extends TestCase {
 		);
 	}
 
+	public function dataGetPreviewLink() {
+		return [
+			['/folder', true, '', ['dir' => '/folder']],
+			['/folder/sub1', true, 'trashbin', ['dir' => '/folder/sub1', 'view' => 'trashbin']],
+			['/folder/sub1/sub2', true, '', ['dir' => '/folder/sub1/sub2']],
+			['/file.txt', false, '', ['dir' => '/', 'scrollto' => 'file.txt']],
+			['/folder/file.txt', false, 'trashbin', ['dir' => '/folder', 'scrollto' => 'file.txt', 'view' => 'trashbin']],
+			['/folder/sub1/file.txt', false, '', ['dir' => '/folder/sub1', 'scrollto' => 'file.txt']],
+		];
+	}
+
 	/**
+	 * @dataProvider dataGetPreviewLink
+	 *
 	 * @param string $path
 	 * @param bool $isDir
 	 * @param string $view
 	 * @param array $expected
 	 */
-	public function testGetPreviewLink($fileId, $expected) {
+	public function testGetPreviewLink($path, $isDir, $view, $expected) {
+		$this->urlGenerator->expects($this->once())
+			->method('linkToRoute')
+			->with('files.view.index', $expected);
+
+		$this->invokePrivate($this->controller, 'getPreviewLink', [$path, $isDir, $view]);
+	}
+
+	public function testGetPreviewLinkFileId() {
 		$this->urlGenerator->expects($this->once())
 			->method('linkToRoute')
 			->with('files.viewcontroller.showFile', ['fileId' => 123]);
