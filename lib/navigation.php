@@ -119,61 +119,77 @@ class Navigation {
 	 * @return array Notification data (user => array of rows from the table)
 	 */
 	public function getLinkList() {
-		$topEntries = [
-			[
-				'icon' => 'files',
-				'id' => 'fileList',
-				'name' => (string) $this->l->t('所有檔案'),
-			],
-			[
-				'icon' => 'favorites',
-				'id' => 'fileList-favorites',
-				'name' => (string) $this->l->t('我的最愛'),
-			],
-			[
-				'icon' => 'sharingin',
-				'id' => 'fileList-sharingin',
-				'name' => (string) $this->l->t('別人分享給我'),
-			],
-			[
-				'icon' => 'sharingout',
-				'id' => 'fileList-sharingout',
-				'name' => (string) $this->l->t('我分享給別人'),
-			],
-			[
-				'icon' => 'sharinglinks',
-				'id' => 'fileList-sharinglinks',
-				'name' => (string) $this->l->t('使用連結分享'),
-			],
-			[
-				'icon' => 'extstoragemounts',
-				'id' => 'fileList-extstoragemounts',
-				'name' => (string) $this->l->t('外部儲存'),
-			],
-			[
-				'icon' => 'activity',
-				'id' => 'all',
-				'name' => (string) $this->l->t('All Activities'),
-				'url' => $this->URLGenerator->linkToRoute('activity.Activities.showList'),
-			],
-			[
-				'icon' => 'trashbin',
-				'id' => 'fileList-trashbin',
-				'name' => (string) $this->l->t('回收桶'),
-			]
-		];
+		if(\OC::$server->getSystemConfig()->getValue("theme", NUll) == "MOE") {
+			$topEntries = [
+				[
+					'icon' => 'files',
+					'id' => 'fileList',
+					'name' => (string) $this->l->t('All files'),
+				],
+				[
+					'icon' => 'favorites',
+					'id' => 'fileList-favorites',
+					'name' => (string) $this->l->t('Favorites'),
+					
+				],
+				[
+					'icon' => 'sharingin',
+					'id' => 'fileList-sharingin',
+					'name' => (string) $this->l->t('Shared with you'),
+				],
+				[
+					'icon' => 'sharingout',
+					'id' => 'fileList-sharingout',
+					'name' => (string) $this->l->t('Shared with others'),
+				],
+				[
+					'icon' => 'sharinglinks',
+					'id' => 'fileList-sharinglinks',
+					'name' => 'Shared with links',
+				],
+				[
+					'icon' => 'extstoragemounts',
+					'id' => 'fileList-extstoragemounts',
+					'name' => (string) $this->l->t('External sotrage'),
+				],
+				[
+					'icon' => 'activity',
+					'id' => 'all',
+					'name' => (string) $this->l->t('All Activities'),
+					'url' => $this->URLGenerator->linkToRoute('activity.Activities.showList')
+				],
+				[
+					'icon' => 'trashbin',
+					'id' => 'fileList-trashbin',
+					'name' => (string) $this->l->t('Deleted files'),
+				]
+			];
+		}
 
-		if ($this->user && $this->userSettings->getUserSetting($this->user, 'setting', 'self')) {
-			// $topEntries[] = [
-			// 	'id' => 'self',
-			// 	'name' => (string) $this->l->t('Activities by you'),
-			// 	'url' => $this->URLGenerator->linkToRoute('activity.Activities.showList', array('filter' => 'self')),
-			// ];
-			// $topEntries[] = [
-			// 	'id' => 'by',
-			// 	'name' => (string) $this->l->t('Activities by others'),
-			// 	'url' => $this->URLGenerator->linkToRoute('activity.Activities.showList', array('filter' => 'by')),
-			// ];
+		else {
+			$topEntries = [
+				[
+					'icon' => 'activity',
+					'id' => 'all',
+					'name' => (string) $this->l->t('All Activities'),
+					'url' => $this->URLGenerator->linkToRoute('activity.Activities.showList')
+				]
+			];
+		}
+
+
+		if ($this->user && $this->userSettings->getUserSetting($this->user, 'setting', 'self') && 
+			\OC::$server->getSystemConfig()->getValue("theme", NUll) != "MOE") {
+			$topEntries[] = [
+				'id' => 'self',
+				'name' => (string) $this->l->t('Activities by you'),
+				'url' => $this->URLGenerator->linkToRoute('activity.Activities.showList', array('filter' => 'self')),
+			];
+			$topEntries[] = [
+				'id' => 'by',
+				'name' => (string) $this->l->t('Activities by others'),
+				'url' => $this->URLGenerator->linkToRoute('activity.Activities.showList', array('filter' => 'by')),
+			];
 
 		}
 
