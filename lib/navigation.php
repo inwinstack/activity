@@ -160,11 +160,12 @@ class Navigation {
                     ]
             ];
             if(\OC::$server->getAppManager()->isEnabledForUser('files_external_moe')){
-                array_splice($topEntries,4,0,[
+                $externalEntry = [
                             'icon' => 'extstoragemounts',
                             'id' => 'fileList-extstoragemounts',
                             'name' => (string) $this->l->t('External sotrage'),
-                    ]);
+                    ];
+                array_splice($topEntries,4,0,array($externalEntry));
             }
         }
 
