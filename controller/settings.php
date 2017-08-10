@@ -190,12 +190,21 @@ class Settings extends Controller {
 			'notify_self'		=> $this->userSettings->getUserSetting($this->user, 'setting', 'self'),
 			'notify_selfemail'	=> $this->userSettings->getUserSetting($this->user, 'setting', 'selfemail'),
 
-			'methods'			=> [
-				IExtension::METHOD_MAIL => $this->l10n->t('Mail'),
-				IExtension::METHOD_STREAM => $this->l10n->t('Stream'),
-			],
+			'methods'			=>  $this->needsHiddenMail(),
 		], '');
 	}
+        
+        public function needsHiddenMail(){
+
+            if (\OC::$server->getSystemConfig()->getValue("theme", NUll) == "MOE"){
+                return [IExtension::METHOD_STREAM => $this->l10n->t('Stream')];
+            }
+            else{return [
+                                IExtension::METHOD_MAIL => $this->l10n->t('Mail'),
+                                IExtension::METHOD_STREAM => $this->l10n->t('Stream'),
+                        ];}
+        }
+
 
 	/**
 	 * @NoAdminRequired
