@@ -167,6 +167,14 @@ class Navigation {
                     ];
                 array_splice($topEntries,4,0,array($externalEntry));
             }
+            if(\OC::$server->getAppManager()->isEnabledForUser('moe_video')){
+                $externalEntry = [
+                            'icon' => 'video',
+                            'id' => 'fileList-video',
+                            'name' => (string) $this->l->t('Learning map'),
+                    ];
+                array_splice($topEntries,-2,0,array($externalEntry));
+            }
         }
 
         else {

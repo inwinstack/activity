@@ -172,7 +172,12 @@ class GroupHelper
 		}
 
 		// Allow other apps to group their notifications
-		return $this->activityManager->getGroupParameter($activity);
+        
+        /*
+         * modified with MOE project. Showing activity message without grouping.
+         * */
+        return false;
+        //return $this->activityManager->getGroupParameter($activity);
 	}
 
 	/**
